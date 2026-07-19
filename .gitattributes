@@ -1,0 +1,5 @@
+*.colorup linguist-language=ColorUp
+*.cup linguist-language=ColorUp
+*.colorup linguist-detectable=true
+*.cup linguist-detectable=true
+*.colorup linguist-documentation=false
