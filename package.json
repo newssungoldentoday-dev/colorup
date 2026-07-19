@@ -1,0 +1,11 @@
+{
+  "name": "colorup",
+  "version": "0.3.0",
+  "description": "ColorUp markup language - a markup language that colors up",
+  "main": "src/index.js",
+  "bin": { "colorup": "./bin/colorup.js" },
+  "scripts": { "test": "node test/test.js" },
+  "keywords": ["markup", "language", "color", "parser"],
+  "author": "Rogge Ramos",
+  "license": "MIT"
+}
