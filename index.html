@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><!-- PLAYABLE_TOUCH_PATCH_V1 --><script>
+(function() {
+  if (window.__playableTouchPatchInstalled) return;
+  window.__playableTouchPatchInstalled = true;
+  var origAdd = EventTarget.prototype.addEventListener;
+  var blockedTypes = { touchstart: 1, touchmove: 1, wheel: 1 };
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
+    if (blockedTypes[type]) {
+      if (options === undefined || options === null) {
+        options = { passive: true };
+      } else if (typeof options === 'boolean') {
+        options = { capture: options, passive: true };
+      } else {
+        options = Object.assign({}, options, { passive: true });
+      }
+    }
+    return origAdd.call(this, type, listener, options);
+  };
+})();
+</script><script>window.Intl=window.Intl||{};Intl.t=function(s){return(Intl._locale&&Intl._locale[s])||s;};</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ColorUp - Markup Language</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Geist",system-ui,sans-serif;background:#0e0e10;color:#e4e4e7;min-height:100vh}
+.mono{font-family:"Geist Mono",monospace}
+header{position:sticky;top:0;z-index:10;border-bottom:1px solid rgba(39,39,42,.8);background:rgba(14,14,16,.8);backdrop-filter:blur(24px)}
+.header-inner{max-width:1320px;margin:0 auto;padding:24px 32px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;gap:16px;align-items:center}
+.logo-icon{width:40px;height:40px;border-radius:12px;background:white;color:black;display:grid;place-items:center;font-weight:600;font-size:17px}
+.badge{font-size:11px;font-weight:500;letter-spacing:.05em;color:#71717a;border:1px solid #27272a;border-radius:9999px;padding:2px 8px;margin-left:8px}
+main{max-width:1320px;margin:0 auto;padding:20px 32px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:1024px){.grid2{grid-template-columns:1fr}main{padding:16px}}
+.card{border:1px solid #27272a;border-radius:20px;overflow:hidden;background:#161618;display:flex;flex-direction:column;min-height:560px}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #27272a;background:#1a1a1d}
+.card-head span{font-size:11px;letter-spacing:.12em;color:#71717a;font-weight:500}
+textarea{flex:1;width:100%;background:transparent;border:0;outline:0;color:#e4e4e7;font-family:"Geist Mono",monospace;font-size:13.5px;line-height:1.8;padding:20px;resize:none}
+.preview-wrap{flex:1;background:#fcfcfb;overflow:auto}
+#preview{padding:24px;color:#18181b;font-size:15px;line-height:1.75}
+#preview h1{font-size:28px;line-height:1.1;font-weight:700;margin:12px 0}
+#preview h2{font-size:20px;line-height:1.2;font-weight:600;margin:16px 0 8px}
+#preview h3{font-size:18px;line-height:1.3;font-weight:600;margin:14px 0 6px}
+#preview hr{border:0;border-top:1px solid #e4e4e7;margin:24px 0}
+#preview blockquote{border-left:3px solid #27272a;padding-left:12px;margin:12px 0;color:#52525b;font-style:italic}
+#preview ul{list-style:disc;padding-left:20px;margin:8px 0}
+#preview li{margin:4px 0}
+#preview code{background:#f4f4f5;border:1px solid #e4e4e7;padding:2px 6px;border-radius:6px;font-size:13px;font-family:"Geist Mono",monospace}
+#preview a{color:#2563eb;text-decoration:underline;text-underline-offset:4px}
+.spec{margin-top:32px;border:1px solid #27272a;border-radius:20px;overflow:hidden;background:#161618}
+.spec-head{padding:16px 24px;border-bottom:1px solid #27272a;display:flex;justify-content:space-between}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.spec-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.spec-grid{grid-template-columns:1fr}}
+.spec-item{padding:20px;border-right:1px solid #27272a;border-bottom:1px solid #27272a}
+.spec-item .lbl{font-size:11px;letter-spacing:.1em;color:#71717a;text-transform:uppercase;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+.spec-item .ex{background:#0e0e10;border:1px solid #27272a;border-radius:12px;padding:10px 12px;font-family:"Geist Mono",monospace;font-size:12.5px;color:#d4d4d8;margin:8px 0}
+.spec-item .out{font-size:13px;color:#f4f4f5}
+.btn{font-size:11px;font-weight:500;letter-spacing:.05em;color:#52525b;border:1px solid #e4e4e7;background:white;border-radius:9999px;padding:4px 12px;cursor:pointer}
+.btn:hover{color:#18181b;border-color:#d4d4d8}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">C</div>
+      <div>
+        <div style="font-size:22px;font-weight:600;letter-spacing:-0.02em;line-height:1">ColorUp <span class="badge">PLAYGROUND</span></div>
+        <div style="font-size:13px;color:#71717a;margin-top:6px">A markup language that colors up</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;font-size:11px;color:#71717a"><span style="width:8px;height:8px;border-radius:50%;background:#34d399;box-shadow:0 0 10px rgba(52,211,153,.5);display:inline-block"></span> Live parser • client-only</div>
+  </div>
+</header>
+
+<main>
+  <div class="grid2">
+    <!-- Editor -->
+    <div class="card">
+      <div class="card-head">
+        <span>EDITOR</span>
+        <span id="charCount" class="mono">0 chars</span>
+      </div>
+      <textarea id="editor" spellcheck="false">#Welcome to ColorUp
+##A markup language that colors up
+
+'This is Bold'
+~This is Italic~
+*"Bold and Italic*"_
+$red[This is color red]$red
+$blue[This is color Blue]$blue
+$green['Bold green' and ~italic green~]$green
+
+- First item
+- Second with 'bold'
+- Third with $green[green text]$green
+
+> This is a quote
+
+_-_
+
+###Colors are fun
+$orange[Orange is awesome]$orange
+$link[Visit Google|https://google.com]$link
+Use `code` for inline code</textarea>
+      <div style="padding:10px 20px;border-top:1px solid #27272a;background:#1a1a1d;display:flex;gap:6px;align-items:center;font-size:11px;color:#71717a"><span style="width:6px;height:6px;border-radius:50%;background:#52525b;display:inline-block"></span> monospace • UTF-8 • no persistence</div>
+    </div>
+
+    <!-- Preview -->
+    <div class="card" style="background:#fbfbfa">
+      <div class="card-head" style="background:#fcfcfb;border-color:#f4f4f5">
+        <span>PREVIEW</span>
+        <span style="color:#a1a1aa;font-family:Geist Mono,monospace">readable HTML</span>
+      </div>
+      <div class="preview-wrap">
+        <div id="preview"></div>
+      </div>
+      <div style="padding:12px 20px;border-top:1px solid #f4f4f5;background:#fcfcfb;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:#a1a1aa">Colors pop because preview is on white</span>
+        <button class="btn" id="resetBtn">RESET EXAMPLE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spec -->
+  <div class="spec">
+    <div class="spec-head">
+      <span style="font-size:13px;letter-spacing:.14em;font-weight:500;color:#d4d4d8">SPEC CHEAT SHEET</span>
+      <span class="mono" style="font-size:11px;color:#71717a">parsing order: block → color → bold+italic → bold → italic • nesting supported</span>
+    </div>
+    <div class="spec-grid mono">
+      <div class="spec-item"><div class="lbl">TITLE <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">#Title</span></div><div class="ex">#Title</div><div class="out" style="font-size:20px;font-weight:600">Title</div></div>
+      <div class="spec-item"><div class="lbl">COLOR <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">$name[...]$name</span></div><div class="ex">$red[hi]$red</div><div class="out"><span style="color:red">hi</span></div></div>
+      <div class="spec-item"><div class="lbl">BOLD <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">'text'</span></div><div class="ex">'Bold'</div><div class="out" style="font-weight:600">Bold</div></div>
+      <div class="spec-item"><div class="lbl">ITALIC <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">~text~</span></div><div class="ex">~Italic~</div><div class="out" style="font-style:italic">Italic</div></div>
+      <div class="spec-item"><div class="lbl">BOLD+ITALIC <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">*"text*"_</span></div><div class="ex">*"Both*"_</div><div class="out" style="font-weight:600;font-style:italic">Both</div></div>
+      <div class="spec-item"><div class="lbl">DIVIDER <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">_-_</span></div><div class="ex">_-_</div><div class="out"><hr style="margin:6px 0"></div></div>
+      <div class="spec-item"><div class="lbl">LIST <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">- item</span></div><div class="ex">- Item</div><div class="out">• Item</div></div>
+      <div class="spec-item"><div class="lbl">QUOTE <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">> quote</span></div><div class="ex">> quote</div><div class="out" style="border-left:2px solid #a1a1aa;padding-left:8px;font-style:italic">quote</div></div>
+      <div class="spec-item"><div class="lbl">CODE <span style="background:#27272a;padding:2px 6px;border-radius:4px;font-size:10px">`code`</span></div><div class="ex">`code`</div><div class="out"><code style="background:#f4f4f5;border:1px solid #e4e4e7;padding:1px 5px;border-radius:4px">code</code></div></div>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:11px;color:#52525b;padding:24px 0 32px">ColorUp v0.3 — full index.html • no build • single file</div>
+</main>
+
+<script>
+// ColorUp Parser v0.3
+const DEFAULT = document.getElementById('editor').value;
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function parseInline(input){
+  let out=input;
+  out=out.replace(/`([^`]+?)`/g,(_,i)=>`<code>${escapeHtml(i)}</code>`);
+  out=out.replace(/\$link\[([^|\]]+)\|([^\]]+)\]\$link/g,(_,t,u)=>`<a href="${escapeHtml(u)}" target="_blank" rel="noopener">${parseInline(t)}</a>`);
+  out=out.replace(/\*"([^*]+?)\*"_/g,(_,i)=>`<strong><em>${parseInline(i)}</em></strong>`);
+  out=out.replace(/\*~([^~]+?)~\*/g,(_,i)=>`<strong><em>${parseInline(i)}</em></strong>`);
+  out=out.replace(/'([^']+?)'/g,(_,i)=>`<strong>${parseInline(i)}</strong>`);
+  out=out.replace(/~([^~]+?)~/g,(_,i)=>`<em>${parseInline(i)}</em>`);
+  return out;
+}
+function parseColorUp(raw){
+  const escaped=escapeHtml(raw);
+  const colorPat="[a-zA-Z]+|#[0-9a-fA-F]{3,8}";
+  const innerRegex=new RegExp(`\\$(${colorPat})\\[((?:(?!\\$[a-zA-Z#]+\\[).)*?)\\]\\$\\1`,"g");
+  let result=escaped, hadMatch, it=0;
+  do{
+    hadMatch=false;
+    result=result.replace(innerRegex,(f,c,inner)=>{
+      hadMatch=true;
+      return `<span style="color:${c}">${parseInline(inner)}</span>`;
+    });
+    it++;
+  }while(hadMatch&&it<50);
+  result=parseInline(result);
+  // Block parsing
+  const lines=result.split(/\n/);
+  let html="", inList=false;
+  for(let line of lines){
+    const t=line.trim();
+    if(!t){ if(inList){html+="</ul>";inList=false} html+="<div style='height:8px'></div>"; continue; }
+    if(t==="_-_"){ if(inList){html+="</ul>";inList=false} html+="<hr/>"; continue; }
+    const h=t.match(/^(#{1,6})(.*)$/);
+    if(h){ if(inList){html+="</ul>";inList=false} const lvl=h[1].length, content=h[2].trim(); html+=`<h${lvl}>${parseInline(content)}</h${lvl}>`; continue; }
+    if(t.startsWith("- ")){ if(!inList){html+="<ul>";inList=true} html+=`<li>${parseInline(t.slice(2))}</li>`; continue; }
+    else { if(inList){html+="</ul>";inList=false} }
+    if(t.startsWith("&gt; " ) || line.trim().startsWith("> ")){ html+=`<blockquote>${parseInline(t.replace(/^&gt;\s?/,"").replace(/^>\s?/,""))}</blockquote>`; continue; }
+    // handle > after escape
+    if(t.startsWith("&gt;")){
+      html+=`<blockquote>${parseInline(t.slice(4).trim())}</blockquote>`; continue;
+    }
+    html+=`<div>${parseInline(line) || "<br/>"}</div>`;
+  }
+  if(inList) html+="</ul>";
+  return html;
+}
+function render(){
+  const code=document.getElementById('editor').value;
+  document.getElementById('charCount').textContent=code.length+" chars";
+  document.getElementById('preview').innerHTML=parseColorUp(code)||"<span style='color:#a1a1aa'>Nothing to preview</span>";
+}
+document.getElementById('editor').addEventListener('input',render);
+document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('editor').value=DEFAULT;render()});
+render();
+</script>
+</body>
+  </html>
+  
